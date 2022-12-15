@@ -61,6 +61,23 @@ app.get(`/matches`, (req, res) => {
     })
 })
 
+app.get(`/machine_stats`, (req, res) => {
+    const machine_id = req.query.id
+    const sql = `SELECT nimi,
+                valmistusvuosi,
+                COUNT(*) as count,
+                COUNT(DISTINCT kisa) as appearances,
+                SUM(pelaaja1_id = voittaja) as p1_voitot
+                FROM ottelut, koneet K
+                WHERE kone_id = ? AND
+                K.id = kone_id;`
+    db.all(sql, [machine_id], (err, rows) => {
+        if (err) return res.json({status: 300, success: false, error: err})
+
+        return res.json({status: 200, data: rows, success: true})
+    })
+})
+
 app.get('/n_matches_by_player', (req, res) => {
     const player_id = req.query.id
     const sql = `SELECT
@@ -79,6 +96,8 @@ app.get('/n_matches_by_player', (req, res) => {
         return res.json({status: 200, data: rows, success: true})
     })
 })
+
+
 
 app.get('/pvp_history', (req, res) => {
     const player_id = req.query.id
