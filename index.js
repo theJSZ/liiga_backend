@@ -79,18 +79,14 @@ app.get(`/machine_stats`, (req, res) => {
 })
 
 app.get('/n_matches_by_player', (req, res) => {
-    const player_id = req.query.id
-    const sql = `SELECT
-                (SELECT COUNT(*)
+    const player_id = parseInt(req.query.id)
+    const sql = `SELECT COUNT(*) as matches,
+                COUNT(DISTINCT kisa) as appearances,
+                SUM(voittaja = ?) as wins,
+                SUM(voittaja != ?) as losses
                 FROM ottelut
-                WHERE (pelaaja1_id = ? OR pelaaja2_id = ?)
-                AND voittaja != ?)
-                AS losses,
-                (SELECT COUNT(*)
-                FROM ottelut
-                WHERE voittaja = ?)
-                AS wins`
-    db.all(sql, [player_id, player_id, player_id, player_id], (err, rows) => {
+                WHERE ? IN (pelaaja1_id, pelaaja2_id);`
+    db.all(sql, [player_id, player_id, player_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
         return res.json({status: 200, data: rows, success: true})
