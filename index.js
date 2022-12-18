@@ -27,6 +27,29 @@ app.get("/all_players", (req, res) => {
     })
 })
 
+app.get("/machine_history_v2", (req, res) => {
+    const machine_id = req.query.id
+    const sql = `SELECT P.nimi as nimi,
+                (SELECT COUNT(*)
+                    FROM ottelut
+                    WHERE voittaja = P.id
+                    AND kone_id = ?) as wins,
+                (SELECT COUNT(*)
+                    FROM ottelut
+                    WHERE (kone_id = ? AND P.id IN (pelaaja1_id, pelaaja2_id)
+                    AND voittaja != P.id)) as losses
+                FROM ottelut, pelaajat P
+                WHERE (wins + losses > 0)
+                GROUP BY P.id
+                ORDER BY P.nimi;`
+
+    db.all(sql, [machine_id, machine_id], (err, rows) => {
+    if (err) return res.json({status: 300, success: false, error: err})
+
+    return res.json({status: 200, data: rows, success: true})
+    })
+})
+
 app.get(`/machine_history_all`, (req, res) => {
     const machine_id = req.query.machine_id
     const sql = `SELECT O.id as ottelu,
