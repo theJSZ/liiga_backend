@@ -18,12 +18,70 @@ sql = 'SELECT nimi FROM pelaajat'
 app.use(bodyParser.json())
 app.use(cors())
 
+app.get("/old_stats", (req, res) => {
+    const player_id = parseInt(req.query.player_id)
+    const sql = `SELECT COUNT(*) AS entries,
+                (SELECT COUNT(*) FROM ottelut, koneet K
+                WHERE voittaja = ?
+                  AND kone_id = K.id
+                  AND K.valmistusvuosi < 1985) AS wins
+                FROM ottelut, koneet K
+                WHERE ? IN (pelaaja1_id, pelaaja2_id)
+                  AND kone_id = K.id
+                  AND K.valmistusvuosi < 1985;`
+
+    db.all(sql, [player_id, player_id], (err, rows) => {
+    if (err) return res.json({status: 300, success: false, error: err})
+
+    return res.json({status: 200, data: rows, success: true})
+    })
+})
+
+app.get("/mid_stats", (req, res) => {
+    const player_id = parseInt(req.query.player_id)
+    const sql = `SELECT COUNT(*) AS entries,
+                (SELECT COUNT(*) FROM ottelut, koneet K
+                WHERE voittaja = ?
+                  AND kone_id = K.id
+                  AND K.valmistusvuosi > 1984
+                  AND K.valmistusvuosi < 1995) AS wins
+                FROM ottelut, koneet K
+                WHERE ? IN (pelaaja1_id, pelaaja2_id)
+                  AND kone_id = K.id
+                  AND K.valmistusvuosi > 1984
+                  AND K.valmistusvuosi < 1995;`
+
+    db.all(sql, [player_id, player_id], (err, rows) => {
+    if (err) return res.json({status: 300, success: false, error: err})
+
+    return res.json({status: 200, data: rows, success: true})
+    })
+})
+
+app.get("/new_stats", (req, res) => {
+    const player_id = parseInt(req.query.player_id)
+    const sql = `SELECT COUNT(*) AS entries,
+                (SELECT COUNT(*) FROM ottelut, koneet K
+                WHERE voittaja = ?
+                  AND kone_id = K.id
+                  AND K.valmistusvuosi > 1994) AS wins
+                FROM ottelut, koneet K
+                WHERE ? IN (pelaaja1_id, pelaaja2_id)
+                  AND kone_id = K.id
+                  AND K.valmistusvuosi > 1994;`
+
+    db.all(sql, [player_id, player_id], (err, rows) => {
+    if (err) return res.json({status: 300, success: false, error: err})
+
+    return res.json({status: 200, data: rows, success: true})
+    })
+})
+
 app.get("/all_players", (req, res) => {
     const sql = "SELECT * FROM pelaajat ORDER BY nimi"
     db.all(sql, [], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
-        console.log(`${req.headers["origin"]} all players`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -33,7 +91,6 @@ app.get("/all_machines", (req, res) => {
     db.all(sql, [], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
-        console.log(`${req.headers["origin"]} all machines`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -57,7 +114,6 @@ app.get("/machine_history_v2", (req, res) => {
     db.all(sql, [machine_id, machine_id], (err, rows) => {
     if (err) return res.json({status: 300, success: false, error: err})
 
-    console.log(`${req.headers["origin"]} machine history ${machine_id}`)
     return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -82,7 +138,6 @@ app.get(`/machine_history_all`, (req, res) => {
     db.all(sql, [machine_id, machine_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
-        console.log(`${req.headers["origin"]}`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -93,7 +148,6 @@ app.get(`/matches`, (req, res) => {
     db.all(sql, [player_id, player_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
-        console.log(`${req.headers["origin"]} matches of ${player_id}`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -146,7 +200,6 @@ app.get('/pvp_history', (req, res) => {
     db.all(sql, [player_id, player_id, player_id, player_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
-        console.log(`${req.headers["origin"]} pvp history of player ${player_id}`)
         return res.json({status:200, data: rows, success: true})
     })
 })
@@ -218,7 +271,6 @@ app.get('/pair_history', (req, res) => {
     db.all(sql, [p1_id, p2_id, p1_id, p2_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
-        console.log(`${req.headers["origin"]} pair history of ${p1_id} and ${p2_id}`)
         return res.json({status:200, data: rows, success: true})
     })
 
@@ -251,7 +303,6 @@ app.get('/player_machine_history', (req, res) => {
     db.all(sql, [parseInt(player_id), parseInt(machine_id)], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
-        console.log(`${req.headers["origin"]} player ${player_id} history on ${machine_id}`)
         return res.json({status:200, data: rows, success: true})
     })
 
