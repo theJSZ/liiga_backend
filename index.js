@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database('flipperiliiga.db')
+const db = new sqlite3.Database('flipperiliiga2.db')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -189,6 +189,7 @@ app.get('/pair_history', (req, res) => {
                     P.nimi as voittaja,
                     P2.id AS haviaja_id,
                     P2.nimi as haviaja,
+                    O.id as id,
                     kisa
                 FROM ottelut O, koneet K, pelaajat P, pelaajat P2
                 WHERE (O.pelaaja1_id IN (P.id, P2.id)
@@ -197,7 +198,7 @@ app.get('/pair_history', (req, res) => {
                     AND O.voittaja = P.id
                     AND P.id IN (?, ?)
                     AND P2.id IN (?, ?)
-                ORDER BY voittaja DESC;`
+                ORDER BY O.kisa;`
 
     db.all(sql, [p1_id, p2_id, p1_id, p2_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
@@ -228,7 +229,8 @@ app.get('/player_machine_history', (req, res) => {
                 AND kone_id = K.id
                 AND P1.id = pelaaja1_id
                 AND P2.id = pelaaja2_id
-                AND K.id = ?;`
+                AND K.id = ?
+                ORDER BY kisa;`
 
     db.all(sql, [parseInt(player_id), parseInt(machine_id)], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
