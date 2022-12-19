@@ -27,6 +27,15 @@ app.get("/all_players", (req, res) => {
     })
 })
 
+app.get("/all_machines", (req, res) => {
+    const sql = "SELECT * FROM koneet ORDER BY nimi"
+    db.all(sql, [], (err, rows) => {
+        if (err) return res.json({status: 300, success: false, error: err})
+
+        return res.json({status: 200, data: rows, success: true})
+    })
+})
+
 app.get("/machine_history_v2", (req, res) => {
     const machine_id = req.query.id
     const sql = `SELECT P.nimi as nimi,
