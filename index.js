@@ -23,7 +23,7 @@ app.get("/all_players", (req, res) => {
     db.all(sql, [], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
-        console.log(`${req.headers['host']} connected`)
+        console.log(`${req.headers["origin"]} all players`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -33,6 +33,7 @@ app.get("/all_machines", (req, res) => {
     db.all(sql, [], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
+        console.log(`${req.headers["origin"]} all machines`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -56,6 +57,7 @@ app.get("/machine_history_v2", (req, res) => {
     db.all(sql, [machine_id, machine_id], (err, rows) => {
     if (err) return res.json({status: 300, success: false, error: err})
 
+    console.log(`${req.headers["origin"]} machine history ${machine_id}`)
     return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -80,6 +82,7 @@ app.get(`/machine_history_all`, (req, res) => {
     db.all(sql, [machine_id, machine_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
+        console.log(`${req.headers["origin"]}`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -90,6 +93,7 @@ app.get(`/matches`, (req, res) => {
     db.all(sql, [player_id, player_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
+        console.log(`${req.headers["origin"]} matches of ${player_id}`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
@@ -142,6 +146,7 @@ app.get('/pvp_history', (req, res) => {
     db.all(sql, [player_id, player_id, player_id, player_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
+        console.log(`${req.headers["origin"]} pvp history of player ${player_id}`)
         return res.json({status:200, data: rows, success: true})
     })
 })
@@ -213,6 +218,7 @@ app.get('/pair_history', (req, res) => {
     db.all(sql, [p1_id, p2_id, p1_id, p2_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
+        console.log(`${req.headers["origin"]} pair history of ${p1_id} and ${p2_id}`)
         return res.json({status:200, data: rows, success: true})
     })
 
@@ -245,6 +251,7 @@ app.get('/player_machine_history', (req, res) => {
     db.all(sql, [parseInt(player_id), parseInt(machine_id)], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
+        console.log(`${req.headers["origin"]} player ${player_id} history on ${machine_id}`)
         return res.json({status:200, data: rows, success: true})
     })
 
