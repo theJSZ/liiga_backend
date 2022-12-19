@@ -23,6 +23,7 @@ app.get("/all_players", (req, res) => {
     db.all(sql, [], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
+        console.log(`${req.headers['host']} connected`)
         return res.json({status: 200, data: rows, success: true})
     })
 })
