@@ -18,17 +18,37 @@ sql = 'SELECT nimi FROM pelaajat'
 app.use(bodyParser.json())
 app.use(cors())
 
+const midBeginsAt = 1985 // was 1985
+const newBeginsAt = 1995 // was 1995
+
+app.get("/pct_history", (req, res) => {
+    const player_id = parseInt(req.query.player_id)
+    const sql = `SELECT COUNT(*) as entries,
+                (SELECT COUNT(*)
+                  FROM ottelut O2
+                  WHERE voittaja = ?
+                    AND O2.kisa=O.kisa) AS wins
+                FROM ottelut O
+                WHERE ? IN (pelaaja1_id, pelaaja2_id)
+                GROUP BY kisa`
+    db.all(sql, [player_id, player_id], (err, rows) => {
+        if (err) return res.json({status: 300, success: false, error: err})
+
+        return res.json({status: 200, data: rows, success: true})
+        })
+})
+
 app.get("/old_stats", (req, res) => {
     const player_id = parseInt(req.query.player_id)
     const sql = `SELECT COUNT(*) AS entries,
                 (SELECT COUNT(*) FROM ottelut, koneet K
                 WHERE voittaja = ?
                   AND kone_id = K.id
-                  AND K.valmistusvuosi < 1985) AS wins
+                  AND K.valmistusvuosi < ${midBeginsAt}) AS wins
                 FROM ottelut, koneet K
                 WHERE ? IN (pelaaja1_id, pelaaja2_id)
                   AND kone_id = K.id
-                  AND K.valmistusvuosi < 1985;`
+                  AND K.valmistusvuosi < ${midBeginsAt};`
 
     db.all(sql, [player_id, player_id], (err, rows) => {
     if (err) return res.json({status: 300, success: false, error: err})
@@ -43,13 +63,13 @@ app.get("/mid_stats", (req, res) => {
                 (SELECT COUNT(*) FROM ottelut, koneet K
                 WHERE voittaja = ?
                   AND kone_id = K.id
-                  AND K.valmistusvuosi > 1984
-                  AND K.valmistusvuosi < 1995) AS wins
+                  AND K.valmistusvuosi > ${midBeginsAt-1}
+                  AND K.valmistusvuosi < ${newBeginsAt}) AS wins
                 FROM ottelut, koneet K
                 WHERE ? IN (pelaaja1_id, pelaaja2_id)
                   AND kone_id = K.id
-                  AND K.valmistusvuosi > 1984
-                  AND K.valmistusvuosi < 1995;`
+                  AND K.valmistusvuosi > ${midBeginsAt-1}
+                  AND K.valmistusvuosi < ${newBeginsAt};`
 
     db.all(sql, [player_id, player_id], (err, rows) => {
     if (err) return res.json({status: 300, success: false, error: err})
@@ -64,11 +84,11 @@ app.get("/new_stats", (req, res) => {
                 (SELECT COUNT(*) FROM ottelut, koneet K
                 WHERE voittaja = ?
                   AND kone_id = K.id
-                  AND K.valmistusvuosi > 1994) AS wins
+                  AND K.valmistusvuosi > ${newBeginsAt-1}) AS wins
                 FROM ottelut, koneet K
                 WHERE ? IN (pelaaja1_id, pelaaja2_id)
                   AND kone_id = K.id
-                  AND K.valmistusvuosi > 1994;`
+                  AND K.valmistusvuosi > ${newBeginsAt-1};`
 
     db.all(sql, [player_id, player_id], (err, rows) => {
     if (err) return res.json({status: 300, success: false, error: err})
