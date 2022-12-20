@@ -27,7 +27,8 @@ app.get("/pct_history", (req, res) => {
                 (SELECT COUNT(*)
                   FROM ottelut O2
                   WHERE voittaja = ?
-                    AND O2.kisa=O.kisa) AS wins
+                    AND O2.kisa=O.kisa) AS wins,
+                kisa AS event
                 FROM ottelut O
                 WHERE ? IN (pelaaja1_id, pelaaja2_id)
                 GROUP BY kisa`
