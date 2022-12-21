@@ -28,9 +28,11 @@ app.get("/pct_history", (req, res) => {
                   FROM ottelut O2
                   WHERE voittaja = ?
                     AND O2.kisa=O.kisa) AS wins,
-                kisa AS event
-                FROM ottelut O
+                kisa AS event,
+                L.nimi AS location
+                FROM ottelut O, lokaatiot L
                 WHERE ? IN (pelaaja1_id, pelaaja2_id)
+                AND L.id = O.lokaatio_id
                 GROUP BY kisa`
     db.all(sql, [player_id, player_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
