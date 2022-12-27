@@ -21,6 +21,20 @@ app.use(cors())
 const midBeginsAt = 1985 // was 1985
 const newBeginsAt = 1995 // was 1995
 
+app.get("/events_by_machine", (req, res) => {
+    const machine_id = parseInt(req.query.machine_id)
+    const sql = `SELECT kisa, L.nimi
+                FROM ottelut, lokaatiot L
+                WHERE kone_id = ?
+                  AND L.id = lokaatio_id
+                GROUP BY kisa;`
+    db.all(sql, [machine_id], (err, rows) => {
+        if (err) return res.json({status: 300, success: false, error: err})
+
+        return res.json({status: 200, data: rows, success: true})
+        })
+})
+
 app.get("/pct_history", (req, res) => {
     const player_id = parseInt(req.query.player_id)
     const sql = `SELECT COUNT(*) as entries,
