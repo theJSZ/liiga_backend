@@ -9,7 +9,7 @@ The Finnish pinball league was played 6 tournaments per year over 10 years. The 
 The app allows you to find this information and more, with links to the original Sheets for verification purposes
 
 #### How
-The database was created by scraping the Sheets using Python, then the data was checked and formatted by a combination of manual and automatic work. The difference between the two database files is that the first one only included qualification results (13'113 matches) while the second one was updated with playoff results, making the total number of 1 vs 1 matches 14'915. In the case of a match where more that two players met, it was handled as a bunch of two player matches. Example: A, B, and C play and finish in this order. Recorded results are: A beat B, A beat C, B beat C.
+The database was created by scraping the Sheets using Python, then the data was checked and formatted by a combination of manual and automatic work. The difference between the two database files is that the first one only included qualification results (13'113 matches) while the second one was updated with playoff results, making the total number of 1 vs 1 matches 14'915. In the case of a match where more than two players met, it was handled as a bunch of two player matches. Example: A, B, and C play and finish in this order. Recorded results are: A beat B, A beat C, B beat C.
 
 #### How to use the app
 There are 5 different views and various things you can click to navigate:
