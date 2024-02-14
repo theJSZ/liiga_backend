@@ -350,7 +350,7 @@ const PORT = process.env.PORT || 3001
 
 // Serve static files from the 'build' directory
 // app.use(express.static(path.join(__dirname, 'build')));
-app.use(express.static(path.resolve(__dirname, '..')));
+// app.use(express.static(path.resolve(__dirname, '..')));
 
 
 // Define catch-all route to serve index.html
