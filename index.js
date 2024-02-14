@@ -349,13 +349,17 @@ app.get('/player_machine_history', (req, res) => {
 const PORT = process.env.PORT || 3001
 
 // Serve static files from the 'build' directory
-app.use(express.static(path.join(__dirname, 'build')));
+// app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname)));
 
 
 // Define catch-all route to serve index.html
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    // res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
+
 });
+console.log(__dirname)
 
 app.listen(PORT, "0.0.0.0", (() =>
 console.log(`running on port ${PORT}`)))
