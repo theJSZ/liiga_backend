@@ -134,7 +134,7 @@ app.get("/all_machines", (req, res) => {
 
 app.get("/machine_history_v2", (req, res) => {
     const machine_id = req.query.id
-    const sql = `SELECT P.nimi as nimi,
+    const sql = `SELECT P.nimi as nimi, P.id,
                 (SELECT COUNT(*)
                     FROM ottelut
                     WHERE voittaja = P.id
@@ -225,7 +225,7 @@ app.get('/n_matches_by_player', (req, res) => {
 
 app.get('/pvp_history', (req, res) => {
     const player_id = req.query.id
-    const sql = `SELECT p.nimi,
+    const sql = `SELECT p.nimi, p.id,
                 (SELECT COUNT(*) FROM ottelut WHERE voittaja = ?
                 AND (pelaaja1_id = P.id OR pelaaja2_id = P.id)) AS wins,
                 (SELECT COUNT(*) FROM ottelut WHERE voittaja = P.id
