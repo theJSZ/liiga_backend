@@ -34,3 +34,4 @@ There are 5 different views and various things you can click to navigate:
   - Click any other player name -> **player vs player view**
   - Click the machine name -> **machine view**
   - Click any event date -> **original Google Sheets for that tournament**
+.
