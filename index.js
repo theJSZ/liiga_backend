@@ -346,5 +346,11 @@ app.get('/player_machine_history', (req, res) => {
 })
 
 const PORT = process.env.PORT || 3001
+
+// Define catch-all route to serve index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 app.listen(PORT, "0.0.0.0", (() =>
 console.log(`running on port ${PORT}`)))
