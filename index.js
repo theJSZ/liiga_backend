@@ -296,7 +296,8 @@ app.get('/pair_history', (req, res) => {
                     P2.id AS haviaja_id,
                     P2.nimi as haviaja,
                     O.id as id,
-                    kisa
+                    kisa,
+                    lokaatio_id
                 FROM ottelut O, koneet K, pelaajat P, pelaajat P2
                 WHERE (O.pelaaja1_id IN (P.id, P2.id)
                     AND O.pelaaja2_id IN (P.id, P2.id))
@@ -326,6 +327,7 @@ app.get('/player_machine_history', (req, res) => {
                 P2.nimi as pelaaja2,
                 pelaaja2_id,
                 kisa,
+                lokaatio_id,
                 O.id as ottelu,
                 voittaja as voittaja_id,
                 (SELECT CASE WHEN (P1.id IS voittaja) THEN P1.nimi ELSE P2.nimi END) as voittaja
