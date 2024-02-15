@@ -116,7 +116,7 @@ app.get("/new_stats", (req, res) => {
 })
 
 app.get("/all_players", (req, res) => {
-    const sql = "SELECT * FROM pelaajat ORDER BY nimi"
+    const sql = "SELECT * FROM pelaajat ORDER BY nimi COLLATE NOCASE"
     db.all(sql, [], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
@@ -125,7 +125,7 @@ app.get("/all_players", (req, res) => {
 })
 
 app.get("/all_machines", (req, res) => {
-    const sql = "SELECT * FROM koneet ORDER BY nimi"
+    const sql = "SELECT * FROM koneet ORDER BY nimi COLLATE NOCASE"
     db.all(sql, [], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
@@ -253,7 +253,8 @@ app.get('/machine_history', (req, res) => {
                 FROM ottelut, koneet k
                 WHERE (wins > 0 OR losses > 0)
                 GROUP BY k.id
-                ORDER BY k.nimi;`
+                ORDER BY k.nimi
+                COLLATE NOCASE;`
     db.all(sql, [player_id, player_id, player_id, player_id], (err, rows) => {
         if (err) return res.json({status: 300, success: false, error: err})
 
